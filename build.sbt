@@ -9,6 +9,7 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % "2.4.0",
   "org.apache.spark" % "spark-sql-kafka-0-10_2.11" % "2.4.0",
   "org.apache.kafka" %% "kafka" % "2.1.0",
+  "org.apache.kafka" % "kafka-clients" % "2.1.1",
 
   "com.typesafe.akka" %% "akka-http" % "10.1.7",
   "com.typesafe.akka" %% "akka-stream" % "2.5.21",
