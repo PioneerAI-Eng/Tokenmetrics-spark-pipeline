@@ -7,7 +7,7 @@ scalaVersion := "2.12.8"
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "2.4.0",
   "org.apache.spark" %% "spark-sql" % "2.4.0",
-  "org.apache.spark" % "spark-sql-kafka-0-10_2.11" % "2.4.0",
+  "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.4.0" % "provided",
   "org.apache.kafka" %% "kafka" % "2.1.0",
 
   "com.typesafe.akka" %% "akka-http" % "10.1.7",
