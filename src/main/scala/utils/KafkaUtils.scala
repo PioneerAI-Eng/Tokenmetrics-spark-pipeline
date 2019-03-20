@@ -3,7 +3,6 @@ package utils
 import java.util
 import java.util.{Collections, Properties}
 
-import kafka.utils.ZkUtils
 import org.apache.kafka.clients.admin._
 import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig}
@@ -16,13 +15,14 @@ object KafkaUtils {
 
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
     props.put(ProducerConfig.CLIENT_ID_CONFIG, "KafkaProducer")
-    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
-    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
+    props.put(ProducerConfig.RETRIES_CONFIG, new Integer(0))
 
     new KafkaProducer[String, String](props)
   }
 
-  def createConsumer(topicName: String): KafkaConsumer[String, String] = {
+  def createKafkaConsumer(topicName: String): KafkaConsumer[String, String] = {
 
     val props = new Properties()
 
