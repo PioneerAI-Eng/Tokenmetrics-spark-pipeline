@@ -27,11 +27,13 @@ object KafkaUtils {
     val props = new Properties()
 
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "something")
+    props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true")
 
     val consumer = new KafkaConsumer[String, String](props)
+
     consumer.subscribe(Collections.singletonList(topicName))
     consumer
   }
