@@ -3,6 +3,7 @@ package utils
 import java.util
 import java.util.{Collections, Properties}
 
+import kafka.utils.ZkUtils
 import org.apache.kafka.clients.admin._
 import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig}
@@ -39,22 +40,21 @@ object KafkaUtils {
 
     val props = new Properties()
 
-    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:2181")
+    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
 
-    val zkClient = AdminClient.create(props)
+    val adminClient = AdminClient.create(props)
 
-    zkClient.createTopics(util.Arrays.asList(new NewTopic(topicName, numPartitions, replicationFactor)))
+    val result = adminClient.createTopics(util.Arrays.asList(new NewTopic(topicName, numPartitions, replicationFactor)))
+    adminClient.close()
+
+    result
   }
 
-  def getTopicList(): ListTopicsResult = {
-
+  def getTopicList(): util.Map[String, TopicListing] = {
     val props = new Properties()
-
-    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:2181")
-
-    val zkClient = AdminClient.create(props)
-
-    zkClient.listTopics()
+    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+    val adminClient = AdminClient.create(props)
+    adminClient.listTopics().namesToListings().get()
   }
 
 }
