@@ -1,4 +1,4 @@
-name := "technology-graph"
+name := "akka-spark-kafka-pipeline"
 
 version := "0.1"
 
