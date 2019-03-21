@@ -1,25 +1,24 @@
 package utils
 
-import org.apache.spark.sql.SparkSession
+import com.mongodb.spark.MongoSpark
+import com.mongodb.spark.config.ReadConfig
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object SparkUtils {
 
-  val sparkKafka = SparkSession.builder.master("local").appName("kafkaStream").getOrCreate()
+  def getDataFrame(): DataFrame = {
 
-  def getKafkaStream() = {
+    val spark = SparkSession.builder()
+      .master("local")
+      .appName("MongoSparkConnectorIntro")
+      .config("spark.mongodb.input.uri", "mongodb://localhost:27017/default")
+      .config("spark.mongodb.input.readPreference.name", "secondaryPreferred")
+      .config("spark.mongodb.output.uri", "mongodb://localhost:27017/default")
+      .getOrCreate()
 
-    import sparkKafka.implicits._
+    //for read from multiple collection in the future
+    val readConfig = ReadConfig(Map("uri" -> "mongodb://localhost:27017/default.repositories"))
 
-    val df = sparkKafka
-      .readStream
-      .format("kafka")
-      .option("kafka.bootstrap.servers", "localhost:9092")
-      .option("subscribe", "test-kafka-topic")
-      .load()
-
-    df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").as[(String, String)]
-
-    df.writeStream.format("console")
+    MongoSpark.load(spark,readConfig)
   }
-
 }
