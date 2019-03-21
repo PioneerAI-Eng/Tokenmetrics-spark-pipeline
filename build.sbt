@@ -19,8 +19,7 @@ libraryDependencies ++= Seq(
 
   "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "1.0-M3",
   "org.mongodb" % "mongodb-driver-reactivestreams" % "1.11.0",
-  "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0",
+  "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0"
+).map(_.exclude("org.slf4j", "*"))
 
-  "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "com.typesafe.akka" %% "akka-slf4j" % "2.5.16"
-)
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
