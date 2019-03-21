@@ -52,6 +52,20 @@ object KafkaUtils {
     result
   }
 
+  def removeTopicIntoKafka(topicName: String): DeleteTopicsResult = {
+
+    val props = new Properties()
+
+    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+
+    val adminClient = AdminClient.create(props)
+
+    val result = adminClient.deleteTopics(util.Arrays.asList(topicName))
+    adminClient.close()
+
+    result
+  }
+
   def getTopicList(): util.Map[String, TopicListing] = {
     val props = new Properties()
     props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
