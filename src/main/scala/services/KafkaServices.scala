@@ -2,8 +2,11 @@ package services
 
 import java.time.Duration
 
+import models.GitHubRepository
+import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.producer.ProducerRecord
-import utils.KafkaUtils
+import org.apache.spark.sql.{Encoder, Encoders}
+import utils.{KafkaUtils, SparkUtils}
 
 trait KafkaServices {
 
@@ -19,11 +22,20 @@ trait KafkaServices {
     producer.close()
   }
 
-  def readFromKafka(topicName: String) = {
+  def readFromKafka(topicName: String): ConsumerRecords[String, String] = {
 
     val consumer = KafkaUtils.createKafkaConsumer(topicName)
 
-    consumer.poll(Duration.ofSeconds(1))
+    consumer.poll(Duration.ofSeconds(10))
+  }
+
+  def readFromKafkaBySpark() = {
+
+    implicit val gitHubRepositoryEncoder: Encoder[GitHubRepository] = Encoders.product[GitHubRepository]
+
+    val resultFrame = SparkUtils.getDataFrameResult()
+
+    (resultFrame._1.as[GitHubRepository].collectAsList(), resultFrame._2)
   }
 
 }
