@@ -1,11 +1,12 @@
 package services
 
 import java.time.Duration
+import java.util
 
 import models.GitHubRepository
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.spark.sql.{Encoder, Encoders}
+import org.apache.spark.sql.{Encoder, Encoders, SparkSession}
 import utils.{KafkaUtils, SparkUtils}
 
 trait KafkaServices {
@@ -29,7 +30,7 @@ trait KafkaServices {
     consumer.poll(Duration.ofSeconds(10))
   }
 
-  def readFromKafkaBySpark() = {
+  def readFromMongoBySpark(): (util.List[GitHubRepository], SparkSession) = {
 
     implicit val gitHubRepositoryEncoder: Encoder[GitHubRepository] = Encoders.product[GitHubRepository]
 
