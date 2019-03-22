@@ -54,12 +54,17 @@ class GitHubRepositoryService @Inject()(db: MongoDatabase)
         Flow[GraphQLQuery].mapAsync(1) {
           query =>
             gitHubRequestComposer.ask(query).mapTo[Option[HttpRequest]]
+        }.map {
+          r => log.info(s"HTTP request have been composed"); r
         }
       }
       val sendRequest: FlowShape[Option[HttpRequest], HttpResponse] = builder.add {
         Flow[Option[HttpRequest]]
           .collect {
             case Some(httpRequest) => httpRequest
+          }
+          .map {
+            r => log.info(s"Send HTTP request to GitHub. URI: ${r.getUri}"); r
           }
           .mapAsync(1)(request => Http().singleRequest(request))
           .throttle(1, FiniteDuration(1, SECONDS)) //needs in order to not exceed rate limit on GitHub
@@ -76,7 +81,9 @@ class GitHubRepositoryService @Inject()(db: MongoDatabase)
               val repo = fields("edges").convertTo[Seq[GitHubRepository]]
               val pageInfo = fields("pageInfo").convertTo[PageInfo]
               (pageInfo, repo)
-          }
+          }.map {
+          t => log.info(s"Response from GitHub has been converted. PageInfo: ${t._1}"); t
+        }
       }
       val httpRequestPartitioner = builder.add {
         Partition[Option[HttpRequest]](
@@ -127,6 +134,10 @@ class GitHubRepositoryService @Inject()(db: MongoDatabase)
       .via(sharedKillSwitch.flow)
       .map(_._2)
       .runWith(mongoSink)
-      .onComplete(_ => as.terminate)
+      .onComplete {
+        _ =>
+          log.info("Terminate the stream.")
+          as.terminate
+      }
   }
 }
