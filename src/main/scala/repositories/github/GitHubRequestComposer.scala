@@ -1,10 +1,9 @@
-package actors
+package repositories.github
 
-import actors.GitHubRequestComposer.{GraphQLQuery, ReduceElementsPerPage, _}
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.RawHeader
-import spray.json._
+import repositories.github.GitHubRequestComposer._
 
 object GitHubRequestComposer {
 
