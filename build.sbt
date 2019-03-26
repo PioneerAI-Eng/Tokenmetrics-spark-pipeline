@@ -18,14 +18,9 @@ libraryDependencies ++= Seq(
   "com.google.inject" % "guice" % "4.1.0",
   "net.codingwell" %% "scala-guice" % "4.2.1",
 
-  //FIXME not forget to fix the issue with a mongo aggregation function for mongo-spark-connector 
-  // it due with akka-stream-alpakka-mongodb, mongodb-driver-reactivestreams, mongo-scala-driver
-
-  "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "1.0-M3",
-  "org.mongodb" % "mongodb-driver-reactivestreams" % "1.11.0",
-  "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0",
-
+  "org.reactivemongo" %% "reactivemongo" % "0.16.4",
   "org.mongodb.spark" %% "mongo-spark-connector" % "2.4.0",
+
   "commons-logging" % "commons-logging" % "1.2"
 
 ).map(_.exclude("org.slf4j", "*"))
