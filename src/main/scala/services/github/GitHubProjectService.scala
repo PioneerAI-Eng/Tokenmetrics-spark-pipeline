@@ -3,41 +3,33 @@ package services.github
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
 
-import actors.GitHubRequestComposer
-import actors.GitHubRequestComposer.GraphQLQuery
-import akka.actor.ActorSystem
+import akka.actor.{ActorSystem, Terminated}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.pattern._
 import akka.stream._
-import akka.stream.alpakka.mongodb.scaladsl.MongoSink
 import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Merge, Partition, Sink, Source}
 import akka.util.Timeout
 import com.google.inject.Inject
-import com.mongodb.reactivestreams.client.MongoDatabase
 import models.GitHubRepositoryProtocol._
 import models.PageInfoProtocol._
-import models.{Dependency, GitHubRepository, PageInfo}
-import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
-import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
-import org.mongodb.scala.bson.codecs.Macros._
+import models.{GitHubRepository, PageInfo}
+import repositories.github.GitHubRequestComposer.GraphQLQuery
+import repositories.github.{GitHubProjectRepository, GitHubRequestComposer}
 import spray.json._
 import utils.Logger
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.FiniteDuration
 
-class GitHubRepositoryService @Inject()(db: MongoDatabase)
-                                       (implicit ec: ExecutionContext) extends Logger {
+class GitHubProjectService @Inject()(gitHubProjectRepository: GitHubProjectRepository) extends Logger {
 
-  private val codecRegistry = fromRegistries(fromProviders(classOf[GitHubRepository], classOf[Dependency]), DEFAULT_CODEC_REGISTRY)
-  private val repositoriesCollection = db.getCollection("repositories", classOf[GitHubRepository]).withCodecRegistry(codecRegistry)
-
-  def fetchRepositoriesWithGraphQL(body: String, totalCount: Int, elementsPerPage: Int): Unit = {
+  def fetchRepositoriesWithGraphQL(body: String, totalCount: Int, elementsPerPage: Int): Future[Terminated] = {
 
     implicit val as: ActorSystem = ActorSystem("GitHub-ActorSystem")
     implicit val mat: ActorMaterializer = ActorMaterializer()
+    implicit val ec: ExecutionContext = as.dispatcher//todo: configure custom context
 
     implicit val timeout: Timeout = Timeout(new FiniteDuration(10, TimeUnit.MINUTES))
 
@@ -126,18 +118,20 @@ class GitHubRepositoryService @Inject()(db: MongoDatabase)
 
       FlowShape(M.in(1), B.out(1))
     }
-    val mongoSink = MongoSink.insertMany(repositoriesCollection)
 
     source
       .map(_ => GraphQLQuery(body))
       .via(graph)
       .via(sharedKillSwitch.flow)
       .map(_._2)
-      .runWith(mongoSink)
-      .onComplete {
-        _ =>
-          log.info("Terminate the stream.")
-          as.terminate
+      .map(gitHubProjectRepository.insertMany)
+      .runWith {
+        Sink.onComplete {
+          _ =>
+            log.info("Terminate the stream.")
+            as.terminate
+        }
       }
+    as.whenTerminated
   }
 }
