@@ -1,4 +1,4 @@
-package services
+package services.kafka
 
 import java.time.Duration
 import java.util
@@ -7,13 +7,13 @@ import models.GitHubRepository
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.spark.sql.{Encoder, Encoders, SparkSession}
-import utils.{KafkaUtils, SparkUtils}
+import services.spark.SparkUtils
 
 trait KafkaServices {
 
   def sendToKafka(topicName: String, key: String, value: String): Unit = {
 
-    if (!KafkaUtils.getTopicList().containsKey(topicName)) {
+    if (!KafkaUtils.getTopicList.containsKey(topicName)) {
       KafkaUtils.createTopicIntoKafka(topicName, 1, 1)
     }
 

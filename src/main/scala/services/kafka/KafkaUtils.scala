@@ -1,4 +1,4 @@
-package utils
+package services.kafka
 
 import java.util
 import java.util.{Collections, Properties}
@@ -67,7 +67,7 @@ object KafkaUtils {
     result
   }
 
-  def getTopicList(): util.Map[String, TopicListing] = {
+  def getTopicList: util.Map[String, TopicListing] = {
     val props = new Properties()
     props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
     val adminClient = AdminClient.create(props)

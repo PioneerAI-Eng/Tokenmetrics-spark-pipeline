@@ -1,4 +1,4 @@
-package utils
+package services.spark
 
 import com.mongodb.spark.MongoSpark
 import com.mongodb.spark.config.ReadConfig
