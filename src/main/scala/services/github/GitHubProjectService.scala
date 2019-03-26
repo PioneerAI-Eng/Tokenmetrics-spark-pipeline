@@ -15,13 +15,13 @@ import com.google.inject.Inject
 import models.GitHubRepositoryProtocol._
 import models.PageInfoProtocol._
 import models.{GitHubRepository, PageInfo}
-import repositories.github.GitHubRequestComposer.GraphQLQuery
-import repositories.github.{GitHubProjectRepository, GitHubRequestComposer}
+import repositories.github.GitHubProjectRepository
+import services.github.GitHubRequestComposer.GraphQLQuery
 import spray.json._
 import utils.Logger
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{ExecutionContext, Future}
 
 class GitHubProjectService @Inject()(gitHubProjectRepository: GitHubProjectRepository) extends Logger {
 
