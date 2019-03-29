@@ -124,7 +124,7 @@ class GitHubProjectService @Inject()(gitHubProjectRepository: GitHubProjectRepos
       .via(graph)
       .via(sharedKillSwitch.flow)
       .map(_._2)
-      .map(gitHubProjectRepository.insertMany)
+      .mapAsync(1)(gitHubProjectRepository.insertMany)
       .runWith {
         Sink.onComplete {
           _ =>
