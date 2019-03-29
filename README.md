@@ -57,7 +57,7 @@ If you have any suggestions or contributions, please contribute.
 
 ## License
 
-Copyright &copy; 2016, 2017 [SysGears INC]. This source code is licensed under the [MIT] license.
+Copyright &copy; 2019 [SysGears INC]. This source code is licensed under the [MIT] license.
 
 [akka streams]: https://doc.akka.io/docs/akka/2.5/stream/
 [spark graphx]: https://spark.apache.org/graphx/ 
