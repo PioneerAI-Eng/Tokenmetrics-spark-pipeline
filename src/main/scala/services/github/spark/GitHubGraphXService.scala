@@ -10,6 +10,12 @@ import scala.collection.mutable
 
 class GitHubGraphXService @Inject()(sparkMongoService: SparkMongoService) {
 
+  /**
+    * Convert DataFrame with GitHubRepository data into GraphFrame
+    *
+    * @param dataFrame an instance of DataFrame
+    * @return an instance of GraphFrame
+    */
   def createGraphFrame(dataFrame: DataFrame): GraphFrame = {
     implicit val gitHubRepositoryEncoder: Encoder[GitHubRepository] = Encoders.product[GitHubRepository]
     implicit val dependencyEncoder: Encoder[Dependency] = Encoders.product[Dependency]
