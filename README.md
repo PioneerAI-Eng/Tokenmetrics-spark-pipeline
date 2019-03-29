@@ -14,6 +14,13 @@ and to obtain statistical data. For our purpose, we use GitHub repositories as a
 | [MongoDB]      | Document-oriented database                                   | It is used for storing raw data            |
 | [Neo4j]        | Graph database                                               | It is used for storing built graph         |
 
+##Branches
+
+| Branch         | Description                                                     |
+| ---------------| ----------------------------------------------------------------|
+| [master]       | The version with the latest features. May not work consistently |                          
+| [spark-graphX] | Version with Spark GraphX functionality. Not fully completed    |
+
 ##Project structure
 
 ```
