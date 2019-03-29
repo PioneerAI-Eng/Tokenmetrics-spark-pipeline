@@ -1,6 +1,6 @@
 import com.google.inject.Guice
 import modules.{AkkaModule, ConfigModule, DBModule}
-import services.github.GitHubProjectService
+import services.github.client.GitHubProjectService
 import services.github.spark.GitHubGraphXService
 import services.spark.SparkMongoService
 

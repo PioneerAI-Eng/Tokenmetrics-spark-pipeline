@@ -1,4 +1,4 @@
-package services.github
+package services.github.client
 
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
@@ -16,7 +16,6 @@ import models.GitHubRepositoryProtocol._
 import models.PageInfoProtocol._
 import models.{GitHubRepository, PageInfo}
 import repositories.github.GitHubProjectRepository
-import services.github.GitHubRequestComposer.GraphQLQuery
 import spray.json._
 import utils.Logger
 

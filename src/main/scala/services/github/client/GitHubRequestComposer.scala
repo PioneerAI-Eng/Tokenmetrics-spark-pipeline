@@ -1,10 +1,9 @@
-package services.github
+package services.github.client
 
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.RawHeader
-import services.github.GitHubRequestComposer.{GraphQLQuery, ReduceElementsPerPage}
-import GitHubRequestComposer._
+import services.github.client.GitHubRequestComposer._
 
 object GitHubRequestComposer {
 
