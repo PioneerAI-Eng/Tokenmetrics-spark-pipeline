@@ -2,16 +2,28 @@
 
 ## Description
 
-This pipeline uses Akka and the Spark framework to build a graph for further analysis and to obtain statistical data. For our sample project, we use GitHub repositories as a dataset.
+Akka Spark Pipeline is an example project that lets you find out how frequently a specific technology is used with different technology stacks.
+
+Akka Spark Pipeline uses Akka, Spark GraphX, MongoDB, and Neo4j to handle and analyze thousands of projects published on GitHub (read: big data) to build a graph with relations between various technologies. Each relation shows the number of projects where two related technologies are used. 
+
+It's possible to use the graph for further analysis and to obtain statistical data.
+
+### How it works
+
+This example project uses the GitHub client to grab the data about repositories, in particular, project metadata and the list of project dependencies. This list of dependencies is then stored in MongoDB. 
+
+Once the projects' data is downloaded and stored in the database, Spark gets it and builds a graph that reflects the relationships between technologies. 
+
+The created graph is then stored in the Neo4j graph database. Using an HTTP server, you can query the database with a specific technology to see the list technologies it's predominantly used with.
 
 ## Technologies
 
-| Technology     | Description                       | Project use    |
-| ---------------| --------------------------------- | -------------------------- |
+| Technology     | Description                       | Project use                                |
+| -------------- | --------------------------------- | ------------------------------------------ |
 | [Akka Streams] | Compose data transformation flows | Retrieve repositories metadata from GitHub |
-| [Spark GraphX] | Spark component for graphs and graph-parallel computations | Build a graph from projects dependencies|
-| [MongoDB]      | A document-oriented database | Used to store raw data         |
-| [Neo4j]        | A Graph database             | Used to store the built graphs |
+| [Spark GraphX] | Spark component for graphs and graph-parallel computations | Build a graph from projects dependencies |
+| [MongoDB]      | A document-oriented database      | Used to store raw data                     |
+| [Neo4j]        | A Graph database                  | Used to store the built graphs             |
 
 ## Branches
 
