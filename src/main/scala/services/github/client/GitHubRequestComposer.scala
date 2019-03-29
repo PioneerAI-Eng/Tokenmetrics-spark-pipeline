@@ -7,7 +7,7 @@ import services.github.client.GitHubRequestComposer._
 
 object GitHubRequestComposer {
 
-  //todo: add personal GitHub token
+  //todo: add personal GitHub token in order to perform GraphQL request to GitHub
   private val headers = RawHeader("Authorization", "Bearer ") ::
     RawHeader("Accept", "application/vnd.github.hawkgirl-preview") :: Nil
   private val uri: Uri = Uri("https://api.github.com/graphql")
@@ -20,6 +20,7 @@ object GitHubRequestComposer {
   //todo: add checking for hasNext page
   case class GraphQLQuery(body: String, cursor: Option[String] = None)
 
+  //todo: for further development
   case class ReduceElementsPerPage(httpRequest: HttpRequest)
 
 }
@@ -49,8 +50,9 @@ class GitHubRequestComposer(totalCount: Int, elementsPerPage: Int) extends Actor
       }
     }
 
-    case reduceElementsPerPage: ReduceElementsPerPage => { //todo: if we catch timeout exception
-      //todo: stop stream if elementsPerPage == 1
+    case reduceElementsPerPage: ReduceElementsPerPage => {
+      //todo: if we catch timeout exception reduce elements per page
+      //todo: stop stream if elementsPerPage == 1 if we do not want to get looping
     }
 
   }

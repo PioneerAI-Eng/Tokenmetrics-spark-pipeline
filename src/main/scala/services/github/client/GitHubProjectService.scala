@@ -16,6 +16,7 @@ import models.GitHubRepositoryProtocol._
 import models.PageInfoProtocol._
 import models.{GitHubRepository, PageInfo}
 import repositories.github.GitHubProjectRepository
+import services.github.client.GitHubRequestComposer.GraphQLQuery
 import spray.json._
 import utils.Logger
 
@@ -24,11 +25,22 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GitHubProjectService @Inject()(gitHubProjectRepository: GitHubProjectRepository) extends Logger {
 
+  /**
+    * Fetches repositories metadata from GitHub and save its into MongoDB.
+    *
+    * @param body            a body of GraphQl query
+    * @param totalCount      a number of repositories which you want to download
+    * @param elementsPerPage a number of elements per page
+    * @return an instance of [[Future]] with [[Terminated]]
+    */
+  //todo: implement functionality for reducing elements per page in a case when we get a timeout from GitHub
   def fetchRepositoriesWithGraphQL(body: String, totalCount: Int, elementsPerPage: Int): Future[Terminated] = {
 
+    //todo: fix bug: After fetching some count of repositories from GitHub
+    // throw exception related to connections created with ReactiveMongo
     implicit val as: ActorSystem = ActorSystem("GitHub-ActorSystem")
     implicit val mat: ActorMaterializer = ActorMaterializer()
-    implicit val ec: ExecutionContext = as.dispatcher//todo: configure custom context
+    implicit val ec: ExecutionContext = as.dispatcher //todo: configure custom context
 
     implicit val timeout: Timeout = Timeout(new FiniteDuration(10, TimeUnit.MINUTES))
 
@@ -118,6 +130,7 @@ class GitHubProjectService @Inject()(gitHubProjectRepository: GitHubProjectRepos
       FlowShape(M.in(1), B.out(1))
     }
 
+    //todo: divide into separate modules
     source
       .map(_ => GraphQLQuery(body))
       .via(graph)
