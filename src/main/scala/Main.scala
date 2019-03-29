@@ -1,12 +1,11 @@
 import akka.actor.ActorSystem
 import com.google.inject.Guice
 import modules.{AkkaModule, ConfigModule, DBModule}
-import services.KafkaServices
 import services.github.GitHubProjectService
 
 import scala.concurrent.ExecutionContext
 
-object Main extends App with KafkaServices {
+object Main extends App {
 
   private val body = "{ \"query\": \"query { search(query: Java, type: REPOSITORY, first: 1) { pageInfo { hasNextPage startCursor endCursor } edges { node { ... on Repository { id name description createdAt stargazers { totalCount } forkCount updatedAt dependencyGraphManifests { totalCount nodes { dependencies { edges { node { packageName requirements } } } } } } } } } } \"}"
   private val injector = Guice.createInjector(new ConfigModule, new AkkaModule, new DBModule)

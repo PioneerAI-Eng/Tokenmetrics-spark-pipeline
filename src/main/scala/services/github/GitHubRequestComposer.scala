@@ -8,8 +8,10 @@ import GitHubRequestComposer._
 
 object GitHubRequestComposer {
 
-  //todo: add personal GitHub token
-  private val headers = RawHeader("Authorization", "Bearer ") ::
+  //todo: set GitHub personal token to perform requests on GitHub
+  private val token = ""
+
+  private val headers = RawHeader("Authorization", "Bearer " + token) ::
     RawHeader("Accept", "application/vnd.github.hawkgirl-preview") :: Nil
   private val uri: Uri = Uri("https://api.github.com/graphql")
   private val httpRequest = HttpRequest(uri = uri, method = HttpMethods.POST).withHeaders(headers)

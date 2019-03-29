@@ -42,7 +42,8 @@ akka-spark-kafka-pipeline
 
 ## How to start
 
-Before starting the application, you must have MongoDB running on your computer.
+Before starting the application, you must have MongoDB running on your computer. Also you must set 
+personal GitHub token into 'services/github/GitHubRequestComposer.scala' class.
 
 Run the application:
 
