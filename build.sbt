@@ -2,7 +2,7 @@ name := "akka-spark-kafka-pipeline"
 
 version := "0.1"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.11.12"
 
 resolvers += "Spark Packages" at "https://dl.bintray.com/spark-packages/maven/"
 
