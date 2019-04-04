@@ -12,7 +12,7 @@ class DBModule extends ScalaModule {
 
   @Provides
   @Singleton
-  //todo: add custom execution context
+//  todo: add custom execution context
   def reactiveMongoApi(config: Config)(implicit ec: ExecutionContext): ReactiveMongo = {
     val uri = config.getString("mongodb.uri")
     val name = config.getString("mongodb.name")
