@@ -29,7 +29,7 @@ class GitHubProjectService @Inject()(gitHubProjectRepository: GitHubProjectRepos
 
     implicit val as: ActorSystem = ActorSystem("GitHub-ActorSystem")
     implicit val mat: ActorMaterializer = ActorMaterializer()
-    implicit val ec: ExecutionContext = as.dispatcher//todo: configure custom context
+    implicit val ec: ExecutionContext = as.dispatchers.lookup("github-dispatcher")
 
     implicit val timeout: Timeout = Timeout(new FiniteDuration(10, TimeUnit.MINUTES))
 
