@@ -1,5 +1,6 @@
 package modules
 
+import akka.actor.ActorSystem
 import com.google.inject.Provides
 import com.typesafe.config.Config
 import javax.inject.Singleton
@@ -12,8 +13,11 @@ class DBModule extends ScalaModule {
 
   @Provides
   @Singleton
-  //todo: add custom execution context
-  def reactiveMongoApi(config: Config)(implicit ec: ExecutionContext): ReactiveMongo = {
+  def reactiveMongoApi(config: Config): ReactiveMongo = {
+
+    implicit val as: ActorSystem = ActorSystem("mongodb-ActorSystem")
+    implicit val ec: ExecutionContext = as.dispatchers.lookup("mongodb-dispatcher")
+
     val uri = config.getString("mongodb.uri")
     val name = config.getString("mongodb.name")
     new ReactiveMongo(uri, name)
