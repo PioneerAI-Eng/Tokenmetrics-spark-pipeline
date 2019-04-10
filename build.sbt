@@ -15,8 +15,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % "2.5.21",
   "io.spray" %% "spray-json" % "1.3.5",
 
-  "com.google.inject" % "guice" % "4.1.0",
-  "net.codingwell" %% "scala-guice" % "4.2.1",
+  "com.google.inject" % "guice" % "4.2.2",
+  "net.codingwell" %% "scala-guice" % "4.2.3",
 
   "org.reactivemongo" %% "reactivemongo" % "0.16.4",
   "org.mongodb.spark" %% "mongo-spark-connector" % "2.4.0",
