@@ -23,7 +23,7 @@ object Main extends App {
       val sparkNeoSession = injector.getInstance(classOf[SparkContextConf]).getSparkSession("local", "NeoSession")
       val dataFrame = injector.getInstance(classOf[SparkMongoService]).loadData(sparkMongoSession)
       val graphFrame: GraphFrame = injector.getInstance(classOf[GitHubGraphXService]).createGraphFrame(dataFrame)
-      val loadResult: Unit = injector.getInstance(classOf[Neo4jRepository]).getSimpleGraph(graphFrame, sparkNeoSession)
+      val loadResult: Unit = injector.getInstance(classOf[Neo4jRepository]).saveGraph(graphFrame, sparkNeoSession)
 
   }
 }
