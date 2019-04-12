@@ -9,36 +9,43 @@ import org.graphframes._
 import org.neo4j.spark._
 import utils.Logger
 
-class Neo4jRepository extends Logger{
+class Neo4jRepository extends Logger {
+
+  implicit val relationEncoder: Encoder[RelationProp] = Encoders.product[RelationProp]
+  implicit val tuple2Encoders: Encoder[(VertexId, String)] = Encoders.product[(VertexId, String)]
+  implicit val long2Encoders: Encoder[(Long, Long, RelationProp)] = Encoders.product[(Long, Long, RelationProp)]
+  implicit val edgeEncoders: Encoder[Edge[String]] = Encoders.product[Edge[String]]
 
   def saveGraph(graphFrame: GraphFrame, sparkNeoSession: SparkSession): Unit = {
     val sc: SparkContext = sparkNeoSession.sparkContext
 
-    implicit val relationEncoder: Encoder[RelationProp] = Encoders.product[RelationProp]
-    implicit val tuple2Encoders: Encoder[(VertexId, String)] = Encoders.product[(VertexId, String)]
-    implicit val long2Encoders: Encoder[(Long, Long, RelationProp)] = Encoders.product[(Long, Long, RelationProp)]
-    implicit val edgeEncoders: Encoder[Edge[String]] = Encoders.product[Edge[String]]
-
     val neo: Neo4j = Neo4j(sc)
 
-    val pattern = neo.pattern(("package","id"),("rel", "id"),("package","id"))
+    val pattern = neo.pattern(("package", "id"), ("rel", "id"), ("package", "id"))
 
-    val verticeRdd: RDD[(VertexId, String)] = graphFrame.vertices.map(ver => {
+    val verticeRdd: RDD[(VertexId, String)] = {
+      val array = graphFrame.vertices.map(ver => {
         val id = ver.getAs[VertexId]("id")
         val packageName = ver.getAs[String]("package")
         (id, packageName)
-      }).rdd
+      }).collect()
+      sc.parallelize(array)
+    }
 
-    val edgesRdd: RDD[Edge[String]] = graphFrame.edges.map(edg => {
-      val src = edg.getAs[Long]("src")
+    val edgesRdd: RDD[Edge[String]] = {
+      val array = graphFrame.edges.map(edg => {
+        val src = edg.getAs[Long]("src")
         val dst = edg.getAs[Long]("dst")
-          val prop = "relationship"
-      Edge(src, dst, prop)
-    }).rdd
+        val prop = "relationship"
+        Edge[String](src, dst, prop)
+      }).collect()
+      sc.parallelize(array)
+    }
 
-    val graph = Graph(verticeRdd, edgesRdd, "default_vertex_name")
+    val graph1 = Graph(verticeRdd, edgesRdd)
 
-    neo.saveGraph(graph, "package", neo.pattern, true)
+    neo.saveGraph(graph1, "name", neo.pattern, true)
+
   }
 
 }
