@@ -9,7 +9,7 @@ import GitHubRequestComposer._
 object GitHubRequestComposer {
 
   //todo: set GitHub personal token to perform requests on GitHub
-  private val token = ""
+  private val token = "cd74f3d9cb788934fbaff8992f295ec7eb5fe73d"
 
   private val headers = RawHeader("Authorization", "Bearer " + token) ::
     RawHeader("Accept", "application/vnd.github.hawkgirl-preview") :: Nil

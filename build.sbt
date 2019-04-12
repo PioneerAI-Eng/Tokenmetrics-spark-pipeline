@@ -11,8 +11,8 @@ libraryDependencies ++= Seq(
   "org.apache.kafka" %% "kafka" % "2.1.0",
   "org.apache.kafka" % "kafka-clients" % "2.1.1",
 
-  "com.typesafe.akka" %% "akka-http" % "10.1.7",
-  "com.typesafe.akka" %% "akka-stream" % "2.5.21",
+  "com.typesafe.akka" %% "akka-http" % "10.1.8",
+  "com.typesafe.akka" %% "akka-stream" % "2.5.22",
   "io.spray" %% "spray-json" % "1.3.5",
 
   "com.google.inject" % "guice" % "4.2.2",
