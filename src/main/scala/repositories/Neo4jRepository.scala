@@ -48,4 +48,10 @@ class Neo4jRepository extends Logger {
 
   }
 
+  def loadGraph(sparkNeoSession: SparkSession): Graph[Long, String] = {
+    val sc: SparkContext = sparkNeoSession.sparkContext
+    val neo: Neo4j = Neo4j(sc)
+    val pattern = neo.pattern(("package", "id"), ("rel", "id"), ("package", "id"))
+    neo.loadGraph
+  }
 }
