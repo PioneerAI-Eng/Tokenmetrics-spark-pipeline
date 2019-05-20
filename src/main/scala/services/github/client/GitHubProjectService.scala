@@ -1,4 +1,4 @@
-package services.github
+package services.github.client
 
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
@@ -16,7 +16,7 @@ import models.GitHubRepositoryProtocol._
 import models.PageInfoProtocol._
 import models.{GitHubRepository, PageInfo}
 import repositories.github.GitHubProjectRepository
-import services.github.GitHubRequestComposer.GraphQLQuery
+import services.github.client.GitHubRequestComposer.GraphQLQuery
 import spray.json._
 import utils.Logger
 
@@ -28,6 +28,8 @@ class GitHubProjectService @Inject()(gitHubProjectRepository: GitHubProjectRepos
 
   def fetchRepositoriesWithGraphQL(body: String, totalCount: Int, elementsPerPage: Int) = {
 
+    //todo: fix bug: After fetching some count of repositories from GitHub
+    // throw exception related to connections created with ReactiveMongo
     implicit val as: ActorSystem = ActorSystem("GitHub-ActorSystem")
     implicit val mat: ActorMaterializer = ActorMaterializer()
     implicit val ec: ExecutionContext = as.dispatchers.lookup("github-dispatcher")
