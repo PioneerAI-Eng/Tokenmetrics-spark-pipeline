@@ -1,5 +1,6 @@
 package repositories
 
+import models.ModelWithId
 import reactivemongo.api.BSONSerializationPack.Writer
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.commands.MultiBulkWriteResult
@@ -8,8 +9,8 @@ import reactivemongo.bson.BSONDocument
 import scala.concurrent.{ExecutionContext, Future}
 
 
-abstract class MongoRepository[T](reactiveMongo: ReactiveMongo)
-                                 (implicit executionContext: ExecutionContext) {
+abstract class MongoRepository[T <: ModelWithId](reactiveMongo: ReactiveMongo)
+                                                (implicit executionContext: ExecutionContext) {
 
   def collectionName: String
 
@@ -21,7 +22,7 @@ abstract class MongoRepository[T](reactiveMongo: ReactiveMongo)
       updateBuilder <- Future(resolvedCollection.update(ordered = true))
       updates <- Future.sequence(documents.map(doc => {
         updateBuilder.element(
-          q = BSONDocument("_id" -> doc.getClass.getDeclaredMethod("_id").invoke(doc).asInstanceOf[String]),
+          q = BSONDocument("_id" -> doc._id),
           u = doc,
           upsert = true,
           multi = false
