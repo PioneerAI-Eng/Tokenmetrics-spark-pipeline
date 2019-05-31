@@ -8,7 +8,7 @@ import services.github.client.GitHubRequestComposer._
 object GitHubRequestComposer {
 
   //todo: set GitHub personal token to perform requests on GitHub
-  private val token = ""
+  private val token = sys.env.getOrElse("GitHubOAuthToken", "")
 
   private val headers = RawHeader("Authorization", "Bearer " + token) ::
     RawHeader("Accept", "application/vnd.github.hawkgirl-preview") :: Nil
