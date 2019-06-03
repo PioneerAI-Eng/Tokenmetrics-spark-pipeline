@@ -1,18 +1,15 @@
 package services.spark
 
+import com.google.inject.Inject
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
+import com.typesafe.config.Config
+import scala.collection.JavaConversions._
 
-class SparkContextConf {
+class SparkContextConf @Inject()(config: Config) {
 
-  //todo: move configuration into application.conf
-  val configs = Map(
-    "spark.mongodb.input.uri" -> "mongodb://localhost:27017/default",
-    "spark.mongodb.input.readPreference.name" -> "secondaryPreferred",
-    "spark.mongodb.output.uri" -> "mongodb://localhost:27017/default",
-    "spark.neo4j.bolt.url" -> "bolt://127.0.0.1:7687",
-    "spark.neo4j.bolt.user" -> "neo4j",
-    "spark.neo4j.bolt.password" -> "niger182")
+  val configs = asScalaSet(config.getConfig("spark.default").entrySet())
+    .map(entry => entry.getKey -> entry.getValue.unwrapped().toString).toMap
 
   val sparkConfig: SparkConf = configs.foldRight(new SparkConf())((values, sparkConf) => sparkConf.set(values._1, values._2))
 
