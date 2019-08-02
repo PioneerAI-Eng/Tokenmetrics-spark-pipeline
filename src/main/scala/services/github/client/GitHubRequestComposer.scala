@@ -1,15 +1,14 @@
-package services.github
+package services.github.client
 
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.RawHeader
-import services.github.GitHubRequestComposer.{GraphQLQuery, ReduceElementsPerPage}
-import GitHubRequestComposer._
+import services.github.client.GitHubRequestComposer._
 
 object GitHubRequestComposer {
 
   //todo: set GitHub personal token to perform requests on GitHub
-  private val token = ""
+  private val token = sys.env.getOrElse("GitHubOAuthToken", "")
 
   private val headers = RawHeader("Authorization", "Bearer " + token) ::
     RawHeader("Accept", "application/vnd.github.hawkgirl-preview") :: Nil
@@ -23,6 +22,7 @@ object GitHubRequestComposer {
   //todo: add checking for hasNext page
   case class GraphQLQuery(body: String, cursor: Option[String] = None)
 
+  //todo: for further development
   case class ReduceElementsPerPage(httpRequest: HttpRequest)
 
 }
@@ -52,8 +52,9 @@ class GitHubRequestComposer(totalCount: Int, elementsPerPage: Int) extends Actor
       }
     }
 
-    case reduceElementsPerPage: ReduceElementsPerPage => { //todo: if we catch timeout exception
-      //todo: stop stream if elementsPerPage == 1
+    case reduceElementsPerPage: ReduceElementsPerPage => {
+      //todo: if we catch timeout exception reduce elements per page
+      //todo: stop stream if elementsPerPage == 1 if we do not want to get looping
     }
 
   }

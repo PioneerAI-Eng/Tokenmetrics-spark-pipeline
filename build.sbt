@@ -2,7 +2,9 @@ name := "akka-spark-kafka-pipeline"
 
 version := "0.1"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.11.12"
+
+resolvers += "Spark Packages" at "https://dl.bintray.com/spark-packages/maven/"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "2.4.0",
@@ -11,8 +13,8 @@ libraryDependencies ++= Seq(
   "org.apache.kafka" %% "kafka" % "2.1.0",
   "org.apache.kafka" % "kafka-clients" % "2.1.1",
 
-  "com.typesafe.akka" %% "akka-http" % "10.1.7",
-  "com.typesafe.akka" %% "akka-stream" % "2.5.21",
+  "com.typesafe.akka" %% "akka-http" % "10.1.8",
+  "com.typesafe.akka" %% "akka-stream" % "2.5.22",
   "io.spray" %% "spray-json" % "1.3.5",
 
   "com.google.inject" % "guice" % "4.2.2",
@@ -20,6 +22,10 @@ libraryDependencies ++= Seq(
 
   "org.reactivemongo" %% "reactivemongo" % "0.16.4",
   "org.mongodb.spark" %% "mongo-spark-connector" % "2.4.0",
+  "org.apache.spark" %% "spark-graphx" % "2.4.0",
+  "graphframes" % "graphframes" % "0.7.0-spark2.4-s_2.11",
+
+  "neo4j-contrib" % "neo4j-spark-connector" % "2.1.0-M4",
 
   "commons-logging" % "commons-logging" % "1.2"
 

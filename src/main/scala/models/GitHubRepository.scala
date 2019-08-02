@@ -10,7 +10,7 @@ case class GitHubRepository(_id: String,
                             starCount: Int,
                             forkCount: Int,
                             updatedAt: String,
-                            dependencies: List[Dependency] = Nil)
+                            dependencies: List[Dependency] = Nil) extends ModelWithId
 
 object GitHubRepositoryProtocol extends DefaultJsonProtocol {
 
